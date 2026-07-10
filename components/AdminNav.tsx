@@ -25,7 +25,7 @@ export default function AdminNav() {
           </li>
         ))}
       </ul>
-      <button onClick={() => signOut({ callbackUrl: '/admin/login' })}
+      <button onClick={() => signOut({ callbackUrl: '/login' })}
         className="text-sm text-gray-500 hover:text-red-600 text-left px-3">
         Sign out
       </button>
