@@ -112,10 +112,11 @@ export default function QuotationForm() {
 
   if (success) return (
     <div className="text-center py-20">
-      <h2 className="text-2xl font-bold text-green-700 mb-2">Quotation Reserved!</h2>
+      <h2 className="text-2xl font-bold mb-2" style={{ color: '#2d7a3a' }}>Quotation Reserved!</h2>
       <p className="text-gray-500 mb-6">ID: {success}</p>
       <button onClick={downloadPDF}
-        className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 mr-3">
+        className="text-white px-6 py-3 rounded mr-3 font-medium"
+        style={{ background: '#c0694a' }}>
         Download PDF
       </button>
       <button onClick={() => { setSuccess(null); setCart([]) }}
@@ -131,12 +132,20 @@ export default function QuotationForm() {
         <div>
           <label className="block text-sm font-medium mb-1">Customer Name</label>
           <input value={customerName} onChange={e => setCustomerName(e.target.value)} required
-            className="w-full border rounded px-3 py-2" placeholder="e.g. ABC Retail Ltd" />
+            className="w-full border rounded px-3 py-2 outline-none text-sm"
+            style={{ borderColor: '#e0d4cc' }}
+            onFocus={e => { e.target.style.borderColor = '#c0694a' }}
+            onBlur={e => { e.target.style.borderColor = '#e0d4cc' }}
+            placeholder="e.g. ABC Retail Ltd" />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Customer Contact</label>
           <input value={customerContact} onChange={e => setCustomerContact(e.target.value)} required
-            className="w-full border rounded px-3 py-2" placeholder="Phone or email" />
+            className="w-full border rounded px-3 py-2 outline-none text-sm"
+            style={{ borderColor: '#e0d4cc' }}
+            onFocus={e => { e.target.style.borderColor = '#c0694a' }}
+            onBlur={e => { e.target.style.borderColor = '#e0d4cc' }}
+            placeholder="Phone or email" />
         </div>
       </div>
 
@@ -166,7 +175,8 @@ export default function QuotationForm() {
                 <td className="px-4 py-2">
                   <button type="button" onClick={() => addToCart(p)}
                     disabled={(p.available ?? 0) === 0}
-                    className="text-blue-600 hover:underline disabled:text-gray-300 text-sm">
+                    className="text-sm font-medium disabled:text-gray-300"
+                    style={{ color: '#c0694a' }}>
                     Add
                   </button>
                 </td>
@@ -218,9 +228,9 @@ export default function QuotationForm() {
               })}
             </tbody>
             <tfoot>
-              <tr className="border-t bg-gray-50">
+              <tr className="border-t" style={{ background: '#fdf3ef' }}>
                 <td colSpan={6} className="px-4 py-3 text-right font-bold">Grand Total</td>
-                <td className="px-4 py-3 font-bold text-lg">{SYMBOL[currency]}{grandTotal()} {currency}</td>
+                <td className="px-4 py-3 font-bold text-lg" style={{ color: '#1a1a2e' }}>{SYMBOL[currency]}{grandTotal()} {currency}</td>
                 <td></td>
               </tr>
             </tfoot>
@@ -230,7 +240,8 @@ export default function QuotationForm() {
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <button type="submit" disabled={loading || cart.length === 0}
-        className="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700 disabled:opacity-50">
+        className="text-white px-8 py-3 rounded font-medium disabled:opacity-50"
+        style={{ background: '#c0694a' }}>
         {loading ? 'Saving...' : 'Save & Reserve Stock'}
       </button>
     </form>

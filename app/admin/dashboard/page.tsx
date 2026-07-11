@@ -51,7 +51,7 @@ export default async function DashboardPage() {
       <div className="bg-white rounded-lg shadow p-5">
         <div className="flex justify-between mb-4">
           <h2 className="font-semibold">Recent Orders</h2>
-          <Link href="/admin/orders" className="text-blue-600 text-sm hover:underline">View all</Link>
+          <Link href="/admin/orders" className="text-sm hover:underline" style={{ color: '#c0694a' }}>View all</Link>
         </div>
         <table className="w-full text-sm">
           <thead className="text-gray-500 text-xs uppercase">

@@ -58,7 +58,7 @@ export default function InventoryTable({ products }: { products: Product[] }) {
                   </div>
                 ) : (
                   <button onClick={() => { setEditing(i); setNewQty(p.qty_total) }}
-                    className="text-blue-600 hover:underline text-xs">Edit Qty</button>
+                    className="hover:underline text-xs" style={{ color: '#c0694a' }}>Edit Qty</button>
                 )}
               </td>
             </tr>

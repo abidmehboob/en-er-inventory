@@ -13,11 +13,17 @@ export default async function QuotationViewPage({ params }: { params: { id: stri
   const sym = SYMBOL[order.currency] ?? '$'
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4">
-      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow p-8">
-        <h1 className="text-3xl font-bold text-blue-700 mb-1">Qaswa Textile</h1>
-        <p className="text-gray-500 mb-6">Premium Towel Wholesale</p>
-        <hr className="mb-6" />
+    <div className="min-h-screen py-10 px-4" style={{ background: '#f8f4f2' }}>
+      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow p-8" style={{ border: '1px solid #f0e8e4' }}>
+        <div className="flex items-center gap-3 mb-1">
+          <div className="flex items-center gap-0">
+            <span style={{ background: '#c0694a', color: '#fff', fontWeight: 800, fontSize: 20, padding: '4px 9px', letterSpacing: 1 }}>EN</span>
+            <span style={{ background: '#1a1a2e', color: '#fff', fontWeight: 800, fontSize: 20, padding: '4px 9px', letterSpacing: 1 }}>ER</span>
+          </div>
+          <span className="text-xl font-bold" style={{ color: '#1a1a2e' }}>EN-ER Textile</span>
+        </div>
+        <p className="mb-6 text-sm" style={{ color: '#888' }}>Premium Towel Wholesale</p>
+        <hr style={{ borderColor: '#f0e8e4', marginBottom: '1.5rem' }} />
         <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
           <div><span className="font-semibold">Quotation ID:</span> {order.order_id}</div>
           <div><span className="font-semibold">Date:</span> {new Date(order.created_at).toLocaleDateString('en-GB')}</div>
@@ -27,7 +33,7 @@ export default async function QuotationViewPage({ params }: { params: { id: stri
         </div>
         <table className="w-full text-sm border-collapse mb-6">
           <thead>
-            <tr className="bg-blue-600 text-white">
+            <tr style={{ background: '#c0694a', color: '#fff' }}>
               {['Article', 'Size', 'GSM', 'Qty', 'Unit Price', 'Total'].map(h => (
                 <th key={h} className="px-4 py-3 text-left">{h}</th>
               ))}
@@ -35,7 +41,7 @@ export default async function QuotationViewPage({ params }: { params: { id: stri
           </thead>
           <tbody>
             {order.items.map((item, i) => (
-              <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+              <tr key={i} style={{ background: i % 2 === 0 ? '#fdf3ef' : '#fff' }}>
                 <td className="px-4 py-3">{item.article}</td>
                 <td className="px-4 py-3">{item.size_cm}</td>
                 <td className="px-4 py-3">{item.gsm}</td>
@@ -46,10 +52,10 @@ export default async function QuotationViewPage({ params }: { params: { id: stri
             ))}
           </tbody>
         </table>
-        <div className="text-right text-xl font-bold mb-8">
+        <div className="text-right text-xl font-bold mb-8" style={{ color: '#1a1a2e' }}>
           Grand Total: {sym}{order.total_amount.toFixed(2)} {order.currency}
         </div>
-        <p className="text-gray-400 text-xs">This quotation is valid for 7 days. Contact: info@qaswatextile.com</p>
+        <p className="text-xs" style={{ color: '#aaa' }}>This quotation is valid for 7 days. Contact: info@en-er-textile.pl</p>
       </div>
     </div>
   )

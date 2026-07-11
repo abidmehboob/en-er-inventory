@@ -19,21 +19,29 @@ export function buildQuotationHTML(order: Order): string {
 <head>
 <meta charset="UTF-8">
 <style>
-  body { font-family: Arial, sans-serif; padding: 40px; color: #1a1a1a; }
-  h1 { color: #1d4ed8; margin-bottom: 4px; }
-  .meta { color: #555; font-size: 14px; margin-bottom: 30px; }
-  .label { font-weight: bold; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; color: #1a1a1a; background: #fff; }
+  .logo { display: flex; align-items: center; gap: 0; margin-bottom: 4px; }
+  .logo-en { background: #c0694a; color: #fff; font-weight: 800; font-size: 20px; padding: 4px 9px; letter-spacing: 1px; }
+  .logo-er { background: #1a1a2e; color: #fff; font-weight: 800; font-size: 20px; padding: 4px 9px; letter-spacing: 1px; }
+  .logo-text { color: #1a1a2e; font-weight: 700; font-size: 14px; margin-left: 10px; letter-spacing: 0.5px; }
+  h1 { color: #1a1a2e; margin-bottom: 4px; font-size: 22px; }
+  .meta { color: #888; font-size: 13px; margin-bottom: 24px; }
+  .label { font-weight: 600; }
+  hr { border: none; border-top: 1px solid #f0e8e4; margin: 16px 0; }
   table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  th { background: #1d4ed8; color: white; padding: 10px; text-align: left; font-size: 13px; }
-  td { padding: 9px 10px; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
-  tr:nth-child(even) { background: #f9fafb; }
-  .total { text-align: right; font-size: 18px; font-weight: bold; margin-top: 20px; }
-  .footer { margin-top: 40px; font-size: 12px; color: #888; border-top: 1px solid #e5e7eb; padding-top: 16px; }
+  th { background: #c0694a; color: white; padding: 10px; text-align: left; font-size: 13px; }
+  td { padding: 9px 10px; border-bottom: 1px solid #f0e8e4; font-size: 13px; }
+  tr:nth-child(even) { background: #fdf3ef; }
+  .total { text-align: right; font-size: 18px; font-weight: bold; margin-top: 20px; color: #1a1a2e; }
+  .footer { margin-top: 40px; font-size: 12px; color: #aaa; border-top: 1px solid #f0e8e4; padding-top: 16px; }
 </style>
 </head>
 <body>
-  <h1>Qaswa Textile</h1>
-  <div class="meta">Premium Towel Wholesale</div>
+  <div class="logo">
+    <span class="logo-en">EN</span><span class="logo-er">ER</span>
+    <span class="logo-text">TEXTILE</span>
+  </div>
+  <div class="meta">Premium Towel Wholesale · info@en-er-textile.pl</div>
   <hr/>
   <p><span class="label">Quotation ID:</span> ${order.order_id}</p>
   <p><span class="label">Date:</span> ${new Date(order.created_at).toLocaleDateString('en-GB')}</p>
@@ -48,7 +56,7 @@ export function buildQuotationHTML(order: Order): string {
   <div class="total">Grand Total: ${sym}${order.total_amount.toFixed(2)} ${order.currency}</div>
   <div class="footer">
     This quotation is valid for 7 days. Stock is reserved upon confirmation.<br/>
-    Contact: info@qaswatextile.com
+    EN-ER Textile · info@en-er-textile.pl
   </div>
 </body>
 </html>`

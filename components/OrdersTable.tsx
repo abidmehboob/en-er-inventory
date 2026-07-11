@@ -47,7 +47,10 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
       <div className="flex gap-2 mb-4">
         {['all', 'reserved', 'confirmed', 'shipped', 'cancelled'].map(s => (
           <button key={s} onClick={() => setFilter(s)}
-            className={`px-3 py-1 rounded text-sm capitalize ${filter === s ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+            className="px-3 py-1 rounded text-sm capitalize font-medium"
+            style={filter === s
+              ? { background: '#c0694a', color: '#fff' }
+              : { background: '#f3ede9', color: '#555' }}>
             {s}
           </button>
         ))}
@@ -78,7 +81,7 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
                 <td className="px-4 py-3 text-gray-500">{new Date(o.created_at).toLocaleDateString('en-GB')}</td>
                 <td className="px-4 py-3 flex gap-2 flex-wrap">
                   <button onClick={() => downloadPDF(o.order_id)}
-                    className="text-blue-600 hover:underline text-xs">PDF</button>
+                    className="text-xs font-medium hover:underline" style={{ color: '#c0694a' }}>PDF</button>
                   {o.status === 'reserved' && (
                     <>
                       <button onClick={() => action(o.order_id, 'confirm')}
@@ -92,7 +95,7 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
                   {o.status === 'confirmed' && (
                     <button onClick={() => action(o.order_id, 'ship')}
                       disabled={loading !== null}
-                      className="text-blue-600 hover:underline text-xs">Mark Shipped</button>
+                      className="text-xs font-medium hover:underline" style={{ color: '#c0694a' }}>Mark Shipped</button>
                   )}
                 </td>
               </tr>

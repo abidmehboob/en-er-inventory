@@ -10,7 +10,10 @@ export default function CurrencyToggle({
     <div className="flex gap-2">
       {CURRENCIES.map(c => (
         <button key={c} onClick={() => onChange(c)}
-          className={`px-3 py-1 rounded text-sm font-medium ${value === c ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+          className="px-3 py-1 rounded text-sm font-medium transition-colors"
+          style={value === c
+            ? { background: '#c0694a', color: '#fff' }
+            : { background: '#f3ede9', color: '#555' }}>
           {c}
         </button>
       ))}

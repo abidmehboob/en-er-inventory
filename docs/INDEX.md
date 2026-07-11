@@ -26,6 +26,7 @@ _(one-paragraph summaries of completed work sessions — add here to avoid reloa
 | Date | Summary | Files touched |
 |------|---------|---------------|
 | 2026-07-10 | Brainstorming session complete. Full design spec approved covering architecture, Google Sheets data model (4 tabs), CAP theorem mutex strategy, public stock page, admin dashboard, PDF quotations, multi-currency (USD/EUR/PLN/GBP), Plesk hosting. | docs/superpowers/specs/2026-07-10-inventory-design.md |
+| 2026-07-10 | Full implementation complete. All 19 tasks built and passing. 18 tests, clean build, 19 routes. App ready for Plesk deployment — needs real .env.local credentials and `npx ts-node scripts/seed-sheets.ts` to seed Google Sheet. | All source files in root |
 
 ---
 
