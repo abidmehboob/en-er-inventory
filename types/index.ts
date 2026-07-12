@@ -58,3 +58,17 @@ export interface Expense {
   notes: string
   created_at: string    // ISO datetime
 }
+
+export type PakistanStockStatus = 'available' | 'out_of_stock'
+
+export interface PakistanStockItem {
+  item_id: string               // UUID, stable across row deletions
+  article: string
+  size_cm: string
+  gsm: number
+  wt_pc: number
+  cartons: number
+  qty_total: number
+  status: PakistanStockStatus
+  created_at: string            // ISO datetime
+}
