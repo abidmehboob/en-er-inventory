@@ -1,5 +1,6 @@
 import { google } from 'googleapis'
-import type { Product, Order, ReservedRow, LineItem, Expense } from '@/types'
+import { v4 as uuidv4 } from 'uuid'
+import type { Product, Order, ReservedRow, LineItem, Expense, PakistanStockItem, PakistanStockStatus } from '@/types'
 
 const SHEET_ID = process.env.GOOGLE_SHEET_ID!
 
@@ -211,5 +212,97 @@ export async function appendExpenseRow(expense: Expense): Promise<void> {
         expense.created_at,
       ]],
     },
+  })
+}
+
+export function parsePakistanStockRow(row: string[]): PakistanStockItem {
+  return {
+    item_id: row[0],
+    article: row[1],
+    size_cm: row[2],
+    gsm: Number(row[3]),
+    wt_pc: Number(row[4]),
+    cartons: Number(row[5]),
+    qty_total: Number(row[6]),
+    status: row[7] as PakistanStockStatus,
+    created_at: row[8],
+  }
+}
+
+async function readPakistanStockRaw(): Promise<string[][]> {
+  const sheets = getSheetsClient()
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: SHEET_ID,
+    range: 'PakistanStock!A2:I',
+  })
+  return (res.data.values || []) as string[][]
+}
+
+export async function readPakistanStock(): Promise<PakistanStockItem[]> {
+  const rows = await readPakistanStockRaw()
+  return rows.filter(row => row[0]).map(parsePakistanStockRow)
+}
+
+export async function appendPakistanStockItem(
+  item: Omit<PakistanStockItem, 'item_id' | 'created_at'>
+): Promise<PakistanStockItem> {
+  const full: PakistanStockItem = {
+    ...item,
+    item_id: uuidv4(),
+    created_at: new Date().toISOString(),
+  }
+  const sheets = getSheetsClient()
+  await sheets.spreadsheets.values.append({
+    spreadsheetId: SHEET_ID,
+    range: 'PakistanStock!A:I',
+    valueInputOption: 'RAW',
+    requestBody: {
+      values: [[
+        full.item_id, full.article, full.size_cm,
+        full.gsm, full.wt_pc, full.cartons,
+        full.qty_total, full.status, full.created_at,
+      ]],
+    },
+  })
+  return full
+}
+
+export async function updatePakistanStockItem(
+  item_id: string,
+  patch: Partial<Omit<PakistanStockItem, 'item_id' | 'created_at'>>
+): Promise<PakistanStockItem> {
+  const rows = await readPakistanStockRaw()
+  const idx = rows.findIndex(row => row[0] === item_id)
+  if (idx === -1) throw new Error(`PakistanStockItem ${item_id} not found`)
+  const current = parsePakistanStockRow(rows[idx])
+  const updated = { ...current, ...patch }
+  const sheets = getSheetsClient()
+  const sheetRow = idx + 2
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: SHEET_ID,
+    range: `PakistanStock!A${sheetRow}:I${sheetRow}`,
+    valueInputOption: 'RAW',
+    requestBody: {
+      values: [[
+        updated.item_id, updated.article, updated.size_cm,
+        updated.gsm, updated.wt_pc, updated.cartons,
+        updated.qty_total, updated.status, updated.created_at,
+      ]],
+    },
+  })
+  return updated
+}
+
+export async function deletePakistanStockItem(item_id: string): Promise<void> {
+  const rows = await readPakistanStockRaw()
+  const idx = rows.findIndex(row => row[0] === item_id)
+  if (idx === -1) throw new Error(`PakistanStockItem ${item_id} not found`)
+  const sheets = getSheetsClient()
+  const sheetRow = idx + 2
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: SHEET_ID,
+    range: `PakistanStock!A${sheetRow}:I${sheetRow}`,
+    valueInputOption: 'RAW',
+    requestBody: { values: [['', '', '', '', '', '', '', '', '']] },
   })
 }
