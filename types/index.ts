@@ -72,3 +72,13 @@ export interface PakistanStockItem {
   status: PakistanStockStatus
   created_at: string            // ISO datetime
 }
+
+export interface PakistanStockFile {
+  file_id: string           // UUID
+  display_name: string      // Admin-set label
+  description: string       // Admin-set description
+  original_filename: string // Original name as uploaded
+  stored_filename: string   // UUID-based name on disk
+  mime_type: string         // e.g. 'application/pdf'
+  uploaded_at: string       // ISO datetime
+}
