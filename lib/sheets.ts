@@ -1,6 +1,6 @@
 import { google } from 'googleapis'
 import { v4 as uuidv4 } from 'uuid'
-import type { Product, Order, ReservedRow, LineItem, Expense, PakistanStockItem, PakistanStockStatus } from '@/types'
+import type { Product, Order, ReservedRow, LineItem, Expense, PakistanStockItem, PakistanStockStatus, PakistanStockFile } from '@/types'
 
 const SHEET_ID = process.env.GOOGLE_SHEET_ID!
 
@@ -305,4 +305,74 @@ export async function deletePakistanStockItem(item_id: string): Promise<void> {
     valueInputOption: 'RAW',
     requestBody: { values: [['', '', '', '', '', '', '', '', '']] },
   })
+}
+
+export function parsePakistanStockFileRow(row: string[]): PakistanStockFile {
+  return {
+    file_id: row[0],
+    display_name: row[1],
+    description: row[2],
+    original_filename: row[3],
+    stored_filename: row[4],
+    mime_type: row[5],
+    uploaded_at: row[6],
+  }
+}
+
+async function readPakistanStockFilesRaw(): Promise<string[][]> {
+  const sheets = getSheetsClient()
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: SHEET_ID,
+    range: 'PakistanStockFiles!A2:G',
+  })
+  return (res.data.values || []) as string[][]
+}
+
+export async function readPakistanStockFiles(): Promise<PakistanStockFile[]> {
+  const rows = await readPakistanStockFilesRaw()
+  return rows.filter(row => row[0] && row.length >= 7).map(parsePakistanStockFileRow)
+}
+
+export async function appendPakistanStockFile(
+  file: Omit<PakistanStockFile, 'file_id' | 'uploaded_at'>
+): Promise<PakistanStockFile> {
+  const full: PakistanStockFile = {
+    ...file,
+    file_id: uuidv4(),
+    uploaded_at: new Date().toISOString(),
+  }
+  const sheets = getSheetsClient()
+  await sheets.spreadsheets.values.append({
+    spreadsheetId: SHEET_ID,
+    range: 'PakistanStockFiles!A:G',
+    valueInputOption: 'RAW',
+    requestBody: {
+      values: [[
+        full.file_id,
+        full.display_name,
+        full.description,
+        full.original_filename,
+        full.stored_filename,
+        full.mime_type,
+        full.uploaded_at,
+      ]],
+    },
+  })
+  return full
+}
+
+export async function deletePakistanStockFileById(file_id: string): Promise<string> {
+  const rows = await readPakistanStockFilesRaw()
+  const idx = rows.findIndex(row => row[0] === file_id)
+  if (idx === -1) throw new Error(`PakistanStockFile ${file_id} not found`)
+  const storedFilename = rows[idx][4]
+  const sheets = getSheetsClient()
+  const sheetRow = idx + 2
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: SHEET_ID,
+    range: `PakistanStockFiles!A${sheetRow}:G${sheetRow}`,
+    valueInputOption: 'RAW',
+    requestBody: { values: [['', '', '', '', '', '', '']] },
+  })
+  return storedFilename
 }
