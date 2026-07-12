@@ -22,7 +22,7 @@ async function main() {
   const meta = await sheets.spreadsheets.get({ spreadsheetId: SHEET_ID })
   const existingTitles = meta.data.sheets?.map(s => s.properties?.title) ?? []
 
-  const tabsToCreate = ['Products', 'Orders', 'Reserved', 'Lock'].filter(
+  const tabsToCreate = ['Products', 'Orders', 'Reserved', 'Lock', 'PakistanStock', 'PakistanStockFiles'].filter(
     t => !existingTitles.includes(t)
   )
 
@@ -94,6 +94,17 @@ async function main() {
     requestBody: { values: [['status', 'locked_at'], ['FREE', '']] },
   })
   console.log('Lock initialized.')
+
+  // PakistanStockFiles: headers only
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: SHEET_ID,
+    range: 'PakistanStockFiles!A1:G1',
+    valueInputOption: 'RAW',
+    requestBody: {
+      values: [['file_id', 'display_name', 'description', 'original_filename', 'stored_filename', 'mime_type', 'uploaded_at']],
+    },
+  })
+  console.log('PakistanStockFiles headers set.')
 
   console.log('\nGoogle Sheets seeded successfully!')
   console.log('All 4 tabs ready: Products, Orders, Reserved, Lock')

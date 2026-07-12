@@ -40,3 +40,7 @@ next-env.d.ts
 
 # superpowers brainstorming session files
 .superpowers/
+
+# pakistan stock uploads
+uploads/pakistan-stock/*
+!uploads/pakistan-stock/.gitkeep
