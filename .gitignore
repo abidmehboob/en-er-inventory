@@ -40,6 +40,7 @@ next-env.d.ts
 
 # superpowers brainstorming session files
 .superpowers/
+.claude/
 
 # pakistan stock uploads
 uploads/pakistan-stock/*
