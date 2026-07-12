@@ -45,3 +45,16 @@ export interface ExchangeRates {
   rates: Record<Currency, number>
   fetched_at: number
 }
+
+export type ExpenseCategory = 'Rent' | 'Shipping' | 'Utilities' | 'Salaries' | 'Other'
+export type ExpenseCurrency = 'PLN' | 'EUR'
+
+export interface Expense {
+  expense_id: string
+  date: string          // ISO date YYYY-MM-DD
+  category: ExpenseCategory
+  amount: number
+  currency: ExpenseCurrency
+  notes: string
+  created_at: string    // ISO datetime
+}
