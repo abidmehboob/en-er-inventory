@@ -1,6 +1,6 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
-import type { PakistanStockItem, PakistanStockStatus } from '@/types'
+import type { PakistanStockItem, PakistanStockStatus, PakistanStockFile } from '@/types'
 
 type FormData = {
   article: string
@@ -46,6 +46,13 @@ export default function PakistanStockPage() {
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState('')
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [files, setFiles] = useState<PakistanStockFile[]>([])
+  const [filesLoading, setFilesLoading] = useState(true)
+  const [fileForm, setFileForm] = useState({ display_name: '', description: '' })
+  const [fileInput, setFileInput] = useState<File | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
+  const [confirmDeleteFileId, setConfirmDeleteFileId] = useState<string | null>(null)
 
   const fetchItems = useCallback(async () => {
     setLoading(true)
@@ -56,6 +63,16 @@ export default function PakistanStockPage() {
   }, [])
 
   useEffect(() => { fetchItems() }, [fetchItems])
+
+  const fetchFiles = useCallback(async () => {
+    setFilesLoading(true)
+    const res = await fetch('/api/pakistan-stock/files')
+    const data = await res.json()
+    setFiles(data)
+    setFilesLoading(false)
+  }, [])
+
+  useEffect(() => { fetchFiles() }, [fetchFiles])
 
   function openAdd() {
     setEditingItem(null)
@@ -122,6 +139,40 @@ export default function PakistanStockPage() {
     await fetch(`/api/pakistan-stock/${item_id}`, { method: 'DELETE' })
     setConfirmDeleteId(null)
     await fetchItems()
+  }
+
+  async function handleUpload(e: React.FormEvent) {
+    e.preventDefault()
+    setUploadError('')
+    if (!fileInput || !fileForm.display_name.trim()) {
+      setUploadError('File and display name are required.')
+      return
+    }
+    setUploading(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', fileInput)
+      fd.append('display_name', fileForm.display_name.trim())
+      fd.append('description', fileForm.description.trim())
+      const res = await fetch('/api/pakistan-stock/files', { method: 'POST', body: fd })
+      if (!res.ok) {
+        const data = await res.json()
+        setUploadError(data.error ?? 'Upload failed')
+        return
+      }
+      setFileForm({ display_name: '', description: '' })
+      setFileInput(null)
+      ;(document.getElementById('file-input') as HTMLInputElement).value = ''
+      await fetchFiles()
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  async function handleDeleteFile(file_id: string) {
+    await fetch(`/api/pakistan-stock/files/${file_id}`, { method: 'DELETE' })
+    setConfirmDeleteFileId(null)
+    await fetchFiles()
   }
 
   return (
@@ -252,6 +303,106 @@ export default function PakistanStockPage() {
           </div>
         </div>
       )}
+
+      {/* Uploaded Files Section */}
+      <div className="mt-10">
+        <h2 className="text-xl font-bold mb-4" style={{ color: '#1a1a2e' }}>Uploaded Files</h2>
+
+        {/* Upload form */}
+        <div className="bg-white rounded-lg shadow-sm border border-[#f0e8e4] p-5 mb-6">
+          <h3 className="text-sm font-semibold mb-3" style={{ color: '#1a1a2e' }}>Upload New File</h3>
+          {uploadError && <div className="text-red-600 text-sm mb-3">{uploadError}</div>}
+          <form onSubmit={handleUpload}>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <label className={labelClass}>File (PDF, Word, Excel)</label>
+                <input
+                  id="file-input"
+                  type="file"
+                  accept=".pdf,.doc,.docx,.xls,.xlsx"
+                  onChange={e => setFileInput(e.target.files?.[0] ?? null)}
+                  className={inputClass}
+                  required
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Display Name</label>
+                <input
+                  type="text"
+                  value={fileForm.display_name}
+                  onChange={e => setFileForm(f => ({ ...f, display_name: e.target.value }))}
+                  className={inputClass}
+                  placeholder="e.g. July 2026 Price List"
+                  required
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Description</label>
+                <input
+                  type="text"
+                  value={fileForm.description}
+                  onChange={e => setFileForm(f => ({ ...f, description: e.target.value }))}
+                  className={inputClass}
+                  placeholder="Optional description"
+                />
+              </div>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button
+                type="submit"
+                disabled={uploading}
+                className="px-4 py-2 text-sm font-semibold rounded text-white"
+                style={{ background: '#c0694a', opacity: uploading ? 0.6 : 1 }}
+              >
+                {uploading ? 'Uploading…' : 'Upload'}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Files table */}
+        {filesLoading ? (
+          <div className="text-sm text-gray-400">Loading files…</div>
+        ) : files.length === 0 ? (
+          <div className="text-sm text-gray-400">No files uploaded yet.</div>
+        ) : (
+          <div className="bg-white rounded-lg shadow-sm border border-[#f0e8e4] overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr style={{ background: '#c0694a', color: '#fff' }}>
+                  <th className="px-4 py-3 text-left font-semibold">Display Name</th>
+                  <th className="px-4 py-3 text-left font-semibold">Description</th>
+                  <th className="px-4 py-3 text-left font-semibold">Original Filename</th>
+                  <th className="px-4 py-3 text-left font-semibold">Uploaded</th>
+                  <th className="px-4 py-3 text-center font-semibold">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {files.map((f, i) => (
+                  <tr key={f.file_id} style={i % 2 === 1 ? { background: '#fdf3ef' } : {}}>
+                    <td className="px-4 py-3 font-semibold" style={{ color: '#1a1a2e' }}>{f.display_name}</td>
+                    <td className="px-4 py-3 text-gray-600">{f.description || '—'}</td>
+                    <td className="px-4 py-3 text-gray-500 text-xs">{f.original_filename}</td>
+                    <td className="px-4 py-3 text-gray-500 text-xs">{new Date(f.uploaded_at).toLocaleDateString()}</td>
+                    <td className="px-4 py-3 text-center">
+                      {confirmDeleteFileId === f.file_id ? (
+                        <span className="text-xs">
+                          Delete?{' '}
+                          <button onClick={() => handleDeleteFile(f.file_id)} className="font-semibold" style={{ color: '#c62828' }}>Yes</button>
+                          {' · '}
+                          <button onClick={() => setConfirmDeleteFileId(null)} style={{ color: '#888' }}>No</button>
+                        </span>
+                      ) : (
+                        <button onClick={() => setConfirmDeleteFileId(f.file_id)} className="text-xs underline" style={{ color: '#c0694a' }}>Delete</button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
