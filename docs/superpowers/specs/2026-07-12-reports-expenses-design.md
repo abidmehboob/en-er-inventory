@@ -82,7 +82,7 @@ export interface Expense {
 ### `/admin/reports` — Reports
 
 **Controls bar:**
-- Tab selector: `Sales | Orders | Expenses | Inventory`
+- Tab selector: `Sales | Orders | Expenses | Inventory | Profit & Loss`
 - Date range: From / To date pickers (hidden on Inventory tab)
 - **Export PDF** button → POST `/api/reports/pdf` with active tab + date range
 
@@ -106,6 +106,16 @@ export interface Expense {
 - Columns: Article, Size (cm), GSM, Total Qty, Reserved, Available, Price (USD)
 - Date picker hidden
 
+**Tab: Profit & Loss**
+- Filters: within date range
+- Shows a summary breakdown:
+  - **Revenue** — sum of confirmed/shipped order totals (in USD, the order currency)
+  - **Expenses PLN** — sum of PLN expenses in date range
+  - **Expenses EUR** — sum of EUR expenses in date range
+  - **Net** — displayed per currency separately (no forced conversion)
+- Rows: one row per month in the date range showing Revenue, Expenses PLN, Expenses EUR, Net per currency
+- Footer: cumulative totals for the full period
+
 ---
 
 ## New API Routes
@@ -118,7 +128,7 @@ Body: `{ date, category, amount, currency, notes }`
 Validates required fields, generates `expense_id` (UUID) and `created_at`, appends to sheet.
 
 ### `POST /api/reports/pdf`
-Body: `{ reportType: 'sales' | 'orders' | 'expenses' | 'inventory', from?: string, to?: string }`  
+Body: `{ reportType: 'sales' | 'orders' | 'expenses' | 'inventory' | 'pnl', from?: string, to?: string }`  
 - Fetches relevant data from Google Sheets
 - Applies date filters server-side
 - Renders HTML report template
@@ -156,6 +166,5 @@ Reuses existing Puppeteer infrastructure from `lib/pdf.ts`.
 ## Out of Scope
 
 - Editing or deleting expenses
-- Revenue report (distinct from Sales) — not requested
-- Profit & Loss accumulative report — not requested in final scope
+- Currency conversion between USD / PLN / EUR for unified P&L total
 - Charts or data visualizations
