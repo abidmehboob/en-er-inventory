@@ -8,6 +8,8 @@ const links = [
   { href: '/admin/inventory', label: 'Inventory' },
   { href: '/admin/new-quotation', label: 'New Quotation' },
   { href: '/admin/orders', label: 'Orders' },
+  { href: '/admin/expenses', label: 'Expenses' },
+  { href: '/admin/reports', label: 'Reports' },
 ]
 
 function EnErLogo() {
