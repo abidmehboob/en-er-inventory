@@ -84,7 +84,7 @@ export default function PakistanStockPage() {
     e.preventDefault()
     setFormError('')
     const { article, size_cm, gsm, wt_pc, cartons, qty_total, status } = form
-    if (!article.trim() || !size_cm.trim() || !gsm || !wt_pc || !cartons || !qty_total) {
+    if (!article.trim() || !size_cm.trim() || !gsm || !wt_pc || cartons === '' || qty_total === '') {
       setFormError('All fields are required.')
       return
     }
