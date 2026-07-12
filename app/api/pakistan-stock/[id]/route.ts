@@ -25,6 +25,19 @@ export async function PUT(
     return NextResponse.json({ error: 'status must be available or out_of_stock' }, { status: 400 })
   }
 
+  if (body.gsm != null && (isNaN(body.gsm) || body.gsm <= 0)) {
+    return NextResponse.json({ error: 'gsm must be a positive number' }, { status: 400 })
+  }
+  if (body.wt_pc != null && (isNaN(body.wt_pc) || body.wt_pc <= 0)) {
+    return NextResponse.json({ error: 'wt_pc must be a positive number' }, { status: 400 })
+  }
+  if (body.cartons != null && (isNaN(body.cartons) || body.cartons < 0)) {
+    return NextResponse.json({ error: 'cartons must be non-negative' }, { status: 400 })
+  }
+  if (body.qty_total != null && (isNaN(body.qty_total) || body.qty_total < 0)) {
+    return NextResponse.json({ error: 'qty_total must be non-negative' }, { status: 400 })
+  }
+
   try {
     const updated = await updatePakistanStockItem(params.id, body)
     return NextResponse.json(updated)
