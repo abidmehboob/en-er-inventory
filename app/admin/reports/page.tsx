@@ -215,7 +215,7 @@ export default function ReportsPage() {
     <div>
       <h1 className="text-2xl font-bold mb-6">Reports</h1>
 
-      <div className="flex gap-1 mb-6 border-b border-[#f0e8e4]">
+      <div className="flex flex-wrap gap-1 mb-6 border-b border-[#f0e8e4]">
         {TABS.map(t => (
           <button key={t.id} onClick={() => handleTabChange(t.id)}
             className="px-4 py-2 text-sm font-semibold rounded-t transition-colors"

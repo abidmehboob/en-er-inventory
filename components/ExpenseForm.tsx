@@ -49,7 +49,7 @@ export default function ExpenseForm({ onAdded }: { onAdded: () => void }) {
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm border border-[#f0e8e4] p-6 mb-8">
       <h2 className="text-lg font-bold mb-4" style={{ color: '#1a1a2e' }}>Add Expense</h2>
       {error && <div className="text-red-600 text-sm mb-3">{error}</div>}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div>
           <label className={labelClass}>Date</label>
           <input type="date" value={date} onChange={e => setDate(e.target.value)} className={inputClass} required />

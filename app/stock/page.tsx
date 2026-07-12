@@ -69,7 +69,7 @@ export default function StockPage() {
                 {files.map(f => (
                   <div
                     key={f.file_id}
-                    className="flex items-center justify-between bg-white rounded-lg border border-[#f0e8e4] px-5 py-4 shadow-sm"
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white rounded-lg border border-[#f0e8e4] px-5 py-4 shadow-sm"
                   >
                     <div>
                       <div className="font-semibold text-sm" style={{ color: '#1a1a2e' }}>{f.display_name}</div>
@@ -79,7 +79,7 @@ export default function StockPage() {
                     </div>
                     <a
                       href={`/api/pakistan-stock/files/${f.file_id}/download`}
-                      className="ml-6 px-4 py-2 text-sm font-semibold rounded text-white shrink-0"
+                      className="px-4 py-2 text-sm font-semibold rounded text-white shrink-0"
                       style={{ background: '#c0694a' }}
                     >
                       Download
