@@ -240,7 +240,7 @@ async function readPakistanStockRaw(): Promise<string[][]> {
 
 export async function readPakistanStock(): Promise<PakistanStockItem[]> {
   const rows = await readPakistanStockRaw()
-  return rows.filter(row => row[0]).map(parsePakistanStockRow)
+  return rows.filter(row => row[0] && row.length >= 9).map(parsePakistanStockRow)
 }
 
 export async function appendPakistanStockItem(
