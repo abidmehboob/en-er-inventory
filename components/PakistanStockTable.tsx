@@ -32,7 +32,7 @@ export default function PakistanStockTable() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-[#f0e8e4] overflow-hidden">
+    <div className="bg-white rounded-lg shadow-sm border border-[#f0e8e4] overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
           <tr style={{ background: '#1a1a2e', color: '#fff' }}>

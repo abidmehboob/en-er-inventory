@@ -154,7 +154,7 @@ export default function QuotationForm() {
         <CurrencyToggle value={currency} onChange={setCurrency} />
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-xs uppercase text-gray-500">
             <tr>
@@ -187,7 +187,7 @@ export default function QuotationForm() {
       </div>
 
       {cart.length > 0 && (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-white rounded-lg shadow overflow-x-auto">
           <h2 className="font-semibold p-4 border-b">Quotation Items</h2>
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-xs uppercase text-gray-500">

@@ -26,7 +26,7 @@ export default function ExpensesPage() {
       ) : expenses.length === 0 ? (
         <div className="text-sm text-gray-400">No expenses recorded yet.</div>
       ) : (
-        <div className="bg-white rounded-lg shadow-sm border border-[#f0e8e4] overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm border border-[#f0e8e4] overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr style={{ background: '#c0694a', color: '#fff' }}>

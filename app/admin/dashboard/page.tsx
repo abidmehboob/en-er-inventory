@@ -53,35 +53,37 @@ export default async function DashboardPage() {
           <h2 className="font-semibold">Recent Orders</h2>
           <Link href="/admin/orders" className="text-sm hover:underline" style={{ color: '#c0694a' }}>View all</Link>
         </div>
-        <table className="w-full text-sm">
-          <thead className="text-gray-500 text-xs uppercase">
-            <tr>
-              {['ID', 'Customer', 'Status', 'Currency', 'Total', 'Date'].map(h => (
-                <th key={h} className="text-left py-2">{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {recentOrders.map(o => (
-              <tr key={o.order_id} className="border-t">
-                <td className="py-2 font-mono text-xs">{o.order_id.slice(0, 8)}…</td>
-                <td className="py-2">{o.customer_name}</td>
-                <td className="py-2">
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                    o.status === 'confirmed' ? 'bg-green-100 text-green-700' :
-                    o.status === 'reserved' ? 'bg-yellow-100 text-yellow-700' :
-                    o.status === 'cancelled' ? 'bg-red-100 text-red-700' :
-                    'bg-gray-100 text-gray-700'}`}>
-                    {o.status}
-                  </span>
-                </td>
-                <td className="py-2">{o.currency}</td>
-                <td className="py-2 font-semibold">{o.total_amount.toFixed(2)}</td>
-                <td className="py-2 text-gray-500">{new Date(o.created_at).toLocaleDateString('en-GB')}</td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="text-gray-500 text-xs uppercase">
+              <tr>
+                {['ID', 'Customer', 'Status', 'Currency', 'Total', 'Date'].map(h => (
+                  <th key={h} className="text-left py-2">{h}</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {recentOrders.map(o => (
+                <tr key={o.order_id} className="border-t">
+                  <td className="py-2 font-mono text-xs">{o.order_id.slice(0, 8)}…</td>
+                  <td className="py-2">{o.customer_name}</td>
+                  <td className="py-2">
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                      o.status === 'confirmed' ? 'bg-green-100 text-green-700' :
+                      o.status === 'reserved' ? 'bg-yellow-100 text-yellow-700' :
+                      o.status === 'cancelled' ? 'bg-red-100 text-red-700' :
+                      'bg-gray-100 text-gray-700'}`}>
+                      {o.status}
+                    </span>
+                  </td>
+                  <td className="py-2">{o.currency}</td>
+                  <td className="py-2 font-semibold">{o.total_amount.toFixed(2)}</td>
+                  <td className="py-2 text-gray-500">{new Date(o.created_at).toLocaleDateString('en-GB')}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )
