@@ -1,5 +1,5 @@
 import { google } from 'googleapis'
-import type { Product, Order, ReservedRow, LineItem } from '@/types'
+import type { Product, Order, ReservedRow, LineItem, Expense } from '@/types'
 
 const SHEET_ID = process.env.GOOGLE_SHEET_ID!
 
@@ -170,5 +170,46 @@ export async function updateProductQty(article: string, size_cm: string, gsm: nu
     range: `Products!F${sheetRow}:H${sheetRow}`,
     valueInputOption: 'RAW',
     requestBody: { values: [[new_qty, products[rowIndex].price_usd, new_version]] },
+  })
+}
+
+export function parseExpenseRow(row: string[]): Expense {
+  return {
+    expense_id: row[0],
+    date: row[1],
+    category: row[2] as Expense['category'],
+    amount: Number(row[3]),
+    currency: row[4] as Expense['currency'],
+    notes: row[5] || '',
+    created_at: row[6],
+  }
+}
+
+export async function readExpenses(): Promise<Expense[]> {
+  const sheets = getSheetsClient()
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: SHEET_ID,
+    range: 'Expenses!A2:G',
+  })
+  return (res.data.values || []).map(row => parseExpenseRow(row as string[]))
+}
+
+export async function appendExpenseRow(expense: Expense): Promise<void> {
+  const sheets = getSheetsClient()
+  await sheets.spreadsheets.values.append({
+    spreadsheetId: SHEET_ID,
+    range: 'Expenses!A:G',
+    valueInputOption: 'RAW',
+    requestBody: {
+      values: [[
+        expense.expense_id,
+        expense.date,
+        expense.category,
+        expense.amount,
+        expense.currency,
+        expense.notes,
+        expense.created_at,
+      ]],
+    },
   })
 }
