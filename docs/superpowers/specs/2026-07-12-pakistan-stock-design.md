@@ -114,7 +114,7 @@ const [products, reserved, pakistanStock] = await Promise.all([
 
 **Section 1 — Warsaw Warehouse**
 - Section heading: warehouse icon + "Warsaw Warehouse" + green "LIVE STOCK" badge
-- Content: existing `<StockTable />` component, unchanged
+- Content: existing `<StockTable />` component, unchanged — pricing, currency selector, and quotation flow all remain exactly as they are today
 
 **Section 2 — Pakistan — Ready to Ship**
 - Section heading: Pakistan flag + "Pakistan — Ready to Ship" + orange "SUPPLIER STOCK" badge
