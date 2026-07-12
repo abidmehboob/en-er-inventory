@@ -259,7 +259,7 @@ export default function PakistanStockPage() {
             {formError && <div className="text-red-600 text-sm mb-3">{formError}</div>}
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="col-span-2">
+                <div className="md:col-span-2">
                   <label className={labelClass}>Article</label>
                   <input type="text" value={form.article} onChange={e => setField('article', e.target.value)} className={inputClass} placeholder="e.g. Hotel White Towel" required />
                 </div>
@@ -314,7 +314,7 @@ export default function PakistanStockPage() {
           {uploadError && <div className="text-red-600 text-sm mb-3">{uploadError}</div>}
           <form onSubmit={handleUpload}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="col-span-2">
+              <div className="md:col-span-2">
                 <label className={labelClass}>File (PDF, Word, Excel)</label>
                 <input
                   id="file-input"
