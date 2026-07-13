@@ -8,13 +8,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 const UPLOAD_DIR = join(process.cwd(), 'uploads', 'pakistan-stock')
 
-const ALLOWED_MIME_TYPES = new Set([
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/vnd.ms-excel',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-])
+const ALLOWED_EXTENSIONS = new Set(['.pdf', '.doc', '.docx', '.xls', '.xlsx'])
 
 export async function GET() {
   try {
@@ -44,11 +38,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'file and display_name are required' }, { status: 400 })
   }
 
-  if (!ALLOWED_MIME_TYPES.has(file.type)) {
+  const ext = extname(file.name).toLowerCase()
+  if (!ALLOWED_EXTENSIONS.has(ext)) {
     return NextResponse.json({ error: 'Only PDF, Word, and Excel files are allowed' }, { status: 400 })
   }
-
-  const ext = extname(file.name) || ''
   const storedFilename = `${uuidv4()}${ext}`
 
   try {
